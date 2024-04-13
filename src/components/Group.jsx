@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { Bounce, ToastContainer, toast } from 'react-toastify';
 import getCookie from '../utils/cookie';
 import { useNavigate } from 'react-router-dom';
-import { fetchGroups } from '../api/users';
+import { fetchGroups, fetchUserDetails, joinGroup } from '../api/users';
 
 const Groups = () => {
   const lightTheme = useSelector((state) => state.themeKey);
@@ -14,6 +14,7 @@ const Groups = () => {
 
   const [loading, setLoading] = useState(false);
   const [groups, setGroups] = useState([]);
+  const [user, setUser] = useState({});
 
   const notify = (text) => {
     toast(`🦄 ${text}`, {
@@ -30,15 +31,19 @@ const Groups = () => {
   };
 
   useEffect(() => {
-    const checkLoggedIn = () => {
+    const checkLoggedIn = async () => {
       const loggedIn = getCookie('at');
       if (!loggedIn) {
         navigate('/login');
       }
+
+      const response = await fetchUserDetails(getCookie('at'));
+      setUser(response.payload);
+      notify(response.message);
     };
 
     checkLoggedIn();
-  });
+  }, []);
 
   useEffect(() => {
     const getGroups = async () => {
@@ -93,6 +98,23 @@ const Groups = () => {
         {groups.length > 0 ? (
           groups.map((group) => (
             <div
+              onClick={async () => {
+                setLoading(true);
+                console.log({ chatId: group._id, userId: user._id });
+                const response = await joinGroup(
+                  { chatId: group._id, userId: user._id },
+                  getCookie('at')
+                );
+                if (response.statusCode === 200) {
+                  console.log('Group joined successfully.');
+                  // notify(response.message);
+                  setLoading(false);
+                } else {
+                  console.error('Failed to join group: ', response.message);
+                  notify(response.message);
+                  setLoading(false);
+                }
+              }}
               key={group._id}
               className={`flex items-center gap-3 bg-white shadow-lg rounded-[20px] py-[10px] px-[10px] m-[10px] duration-200 hover:bg-[#E2E2E2] ${
                 lightTheme ? '' : 'dark'
