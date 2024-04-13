@@ -89,7 +89,7 @@ const Register = () => {
           onClick={handleSubmit}
           className='bg-black text-white px-8 py-2 rounded-[10px] hover:rounded-[20px] shadow-lg hover:bg-stone-700 duration-200 hover:shadow-sm font-semibold text-[1.2rem]'
         >
-          Sign in
+          Register
         </button>
         <p>
           Already have an account?{' '}
