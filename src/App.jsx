@@ -9,6 +9,7 @@ import CreateGroups from './components/CreateGroups';
 import Users from './components/User';
 import Groups from './components/Group';
 import { useSelector } from 'react-redux';
+import Register from './pages/Register';
 
 function App() {
   const lightTheme = useSelector((state) => state.themeKey);
@@ -22,7 +23,8 @@ function App() {
       {/* <Container /> */}
       {/* <Login /> */}
       <Routes>
-        <Route exact path='/' element={<Login />} />
+        <Route exact path='/login' element={<Login />} />
+        <Route exact path='/register' element={<Register />} />
         <Route exact path='/app' element={<Container />}>
           <Route path='welcome' element={<Welcome />} />
           <Route path='chat' element={<ChatArea />} />

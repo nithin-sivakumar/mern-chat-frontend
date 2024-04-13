@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react';
 import image from '../Images/live-chat_512px.png';
-import { signIn } from '../api/auth';
+import { register } from '../api/auth';
 import { toast, Bounce, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from 'react-router-dom';
 import getCookie from '../utils/cookie';
-import { Backdrop, CircularProgress } from '@mui/material';
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const checkLoggedIn = () => {
@@ -43,19 +41,16 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const formData = { email: email, password: password };
+      const formData = { name: name, email: email, password: password };
       console.log(`req.body = ${JSON.stringify(formData)}`);
-      setLoading(true);
-      const response = await signIn(formData);
-      if (response.statusCode === 200) {
-        console.log('Login successful');
+      const response = await register(formData);
+      if (response.statusCode === 201) {
+        console.log('Registration successful');
         notify(response.message);
-        setLoading(false);
         setTimeout(() => navigate('/app/welcome'), 5000);
       } else {
-        console.error('Login failed: ', response.message);
+        console.error('Registration failed: ', response.message);
         notify(response.message);
-        setLoading(false);
       }
     } catch (error) {
       console.error('Error:', error);
@@ -65,20 +60,19 @@ const Login = () => {
   return (
     <div className='w-[90vw] h-[90vh] bg-[#f4f5f8] rounded-[20px] flex'>
       <ToastContainer />
-      <Backdrop
-        sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={loading}
-        // onClick={handleClose}
-      >
-        <CircularProgress color='inherit' />
-      </Backdrop>
       {/* Image Container */}
       <div className='flex-[0.3] flex items-center justify-center'>
         <img src={image} alt='Live Chat' className='w-[80%]' />
       </div>
-      {/* Login Box */}
+      {/* Register Box */}
       <form className='flex flex-[0.7] flex-col items-center justify-center gap-[20px] bg-[#fff] rounded-[20px] m-[10px] shadow'>
-        <p className='text-[2rem] font-semibold'>Sign in to your account</p>
+        <p className='text-[2rem] font-semibold'>Create an account</p>
+        <input
+          onChange={(e) => setName(e.target.value)}
+          type='text'
+          placeholder='Full Name'
+          className='outline-none w-[24rem] border-none pl-[20px] bg-[#f4f5f8] py-3 text-[1.25rem] rounded-[20px]'
+        />
         <input
           onChange={(e) => setEmail(e.target.value)}
           type='text'
@@ -98,12 +92,12 @@ const Login = () => {
           Sign in
         </button>
         <p>
-          Don&apos;t have an account?{' '}
+          Already have an account?{' '}
           <span
-            onClick={() => navigate('/register')}
+            onClick={() => navigate('/login')}
             className='text-green-700 font-semibold hover:underline hover:underline-offset-4 cursor-pointer'
           >
-            Create one now
+            Sign in now
           </span>
         </p>
       </form>
@@ -111,4 +105,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

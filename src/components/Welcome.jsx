@@ -1,8 +1,23 @@
 import image from '../Images/live-chat_512px.png';
 import { useSelector } from 'react-redux';
+import getCookie from '../utils/cookie';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const Welcome = () => {
   const lightTheme = useSelector((state) => state.themeKey);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkLoggedIn = () => {
+      const loggedIn = getCookie('at');
+      if (!loggedIn) {
+        navigate('/login');
+      }
+    };
+
+    checkLoggedIn();
+  });
 
   return (
     <div
