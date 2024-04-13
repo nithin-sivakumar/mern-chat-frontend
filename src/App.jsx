@@ -27,7 +27,7 @@ function App() {
         <Route exact path='/register' element={<Register />} />
         <Route exact path='/app' element={<Container />}>
           <Route path='welcome' element={<Welcome />} />
-          <Route path='chat' element={<ChatArea />} />
+          <Route path='chat/:_id' element={<ChatArea />} />
           <Route path='users' element={<Users />} />
           <Route path='groups' element={<Groups />} />
           <Route path='create-group' element={<CreateGroups />} />

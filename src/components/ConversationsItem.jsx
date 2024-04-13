@@ -13,7 +13,11 @@ const ConversationsItem = ({ props }) => {
         <p className='con-icon'>{props.name[0]}</p>
         <div className='flex flex-col justify-center items-start gap-0'>
           <p className='text-lg'>{props.name}</p>
-          <p className='text-sm'>{props.lastMessage}</p>
+          <p className='text-sm'>
+            {props?.latestMessage
+              ? props?.latestMessage
+              : 'No chats yet. Send a message now'}
+          </p>
         </div>
       </div>
       <div>
